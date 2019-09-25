@@ -1,20 +1,17 @@
 import TRON
-
+import math
 def display ():
     TRON.doTheMagic()
-
-    #TRON.pointCamera (TRON.cameraPosX, TRON.cameraPosY, TRON.cameraPosZ, TRON.cameraPosX, TRON.cameraPosY, TRON.cameraPosZ + 1)
-
-    TRON.drawSphere (-1, 0, 3, 0.5, 10)
-    TRON.drawSphere (1, 0, 3, 0.5, 100)
-    TRON.drawSphere (-1, 0, 5, 0.5, 100)
-    TRON.drawSphere (1, 0, 5, 0.5, 10)
-    
+    sz = 40
+    for x in range (sz):
+    	for z in range (sz):
+    		blue = (x * z) / (sz**2) * 4
+    		if blue > 1:
+    			blue = 1
+    		TRON.setColorRGB(x / sz, z / sz, blue)
+    		TRON.drawSphere(x-sz/2, 0, z-sz/2, 0.3, 20)
     TRON.doTheMagic2()
-
-    #print(str(TRON.cameraAngle1) + " " + str(TRON.cameraAngle2))
-
 TRON.Prepare ("TRON example", 1280, 720, display, TRON.keyboardFunction, TRON.mouseButtonFunction, TRON.mouseMoveFunction, 100, 100)
-#TRON.printMouseMoveEvent = 1
-#TRON.printMouseButtonEvent = 1
+TRON.cameraLookAtY = -30
+TRON.cameraAngle2 = -math.pi/2+0.01
 TRON.Launch()

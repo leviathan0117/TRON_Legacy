@@ -16,7 +16,10 @@ cameraPosZ = 0
 # Point at which the camera looks in (X, Y, Z)
 cameraLookAtX = 0
 cameraLookAtY = 0
-cameraLookAtZ = 4
+cameraLookAtZ = 0
+
+# Regulates how sensitive camera movement would be to mouse movement. Original value = 0.005
+cameraSensitivity = 0.005
 
 #################### Parameters for CONST_CameraRevolve (0):
 cameraAngle1 = 0
@@ -25,23 +28,33 @@ cameraAngle2 = 0
 #################### Parameters for CONST_CameraFly (1):
 
 
+######################################## Movement:
+movementMode = 0
+movementSpeed = 0.1
+
+# Allows / prohibits changing movement speed
+allowMovementSpeedChange = 1
+
+######################################## DRAWING:
+colorR = 1
+colorG = 1
+colorB = 1
+
 ######################################## LOG parameters:
 printMouseButtonEvent = 0
 printMouseMoveEvent = 0
 
 ######################################## CONSTANTS:
+#!!!!! CONSTANTS WORK ONLY WITHIN DEFAULT FUNCTIONS !!!!!
 
-# If setted to cameraMode and used with default mouse functions - will make camera revolve around a certain point
+# Makes camera revolve around a certain point
 CONST_CameraRevolve = 0 
 
-# If setted to cameraMode and used with default mouse functions - will make camera 'fly' through 3D space
-CONST_CameraFly = 1
+# Makes camera look around FROM a specific point
+CONST_CameraLookAroung = 1
 
-def drawSphere (xPosition, yPosition, zPosition, radius, quality):
-    glPushMatrix()
-    glTranslatef   (xPosition, yPosition, zPosition)
-    glutSolidSphere(radius, quality, quality)
-    glPopMatrix()
+# Makes camera move in a plane - WASD keys are for changin plane coordinates, C or SPACE for rising/lowing down the plane
+CONST_MoveField = 0
 
 def init ():
     glClearColor (0.0, 0.0, 0.0, 0.0)
@@ -69,16 +82,41 @@ def loadTexture (fileName):
     
     return texture
 
+# TODO: find out why only one keyboard button can work at a time
 def keyboardFunction ( *args ):
     if args [0] == b'\x1b':
         sys.exit ()
 
     global cameraPosX, cameraPosY, cameraPosZ
     global cameraLookAtX, cameraLookAtY, cameraLookAtZ
-    global cameraMode
+    global cameraMode, movementMode
+    global movementSpeed, allowMovementSpeedChange
 
-    if cameraMode == 0:
-        pass
+    # TODO: prove this should work theoretically:
+    if movementMode == 0:
+        if args [0] == b'w':
+            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
+            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
+        if args [0] == b's':
+            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
+            cameraLookAtX += movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
+        if args [0] == b'd':
+            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1)
+            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1)
+        if args [0] == b'a':
+            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1)
+            cameraLookAtX += movementSpeed * math.sin(cameraAngle1)
+        if args [0] == b'c':
+            cameraLookAtY += movementSpeed
+        if args [0] == b' ':
+            cameraLookAtY -= movementSpeed
+        if args [0] == b'e' and allowMovementSpeedChange:
+            movementSpeed += 0.01
+        if args [0] == b'q' and allowMovementSpeedChange:
+            movementSpeed -= 0.01
+            if movementSpeed < 0:
+                movementSpeed = 0
+
 
     if cameraMode == 1:
         if args [0] == b'w':
@@ -166,8 +204,9 @@ def mouseMoveFunction (mouseX, mouseY):
 
     deltaX = mouseX - mouseXPrev
     deltaY = mouseY - mouseYPrev
-    cameraAngle1 += deltaX * 0.005
-    cameraAngle2 -= deltaY * 0.005
+
+    cameraAngle1 += deltaX * cameraSensitivity
+    cameraAngle2 -= deltaY * cameraSensitivity
     #the 0.01 - is a bug fixer which doesn't allow for Pi/2 or close to Pi/2 angles (as it results in strange behavior)
     #TODO: fix this problem somehow
     if cameraAngle2 >= math.pi / 2 - 0.01: 
@@ -199,4 +238,39 @@ def Launch ():
     glutMainLoop ()
 
 
+################################################## Drawing functions:
 
+def setColorRGB256 (colorRIn, colorGIn, colorBIn):
+    global colorR, colorG, colorB
+
+    colorR = colorRIn / 255
+    colorG = colorGIn / 255
+    colorB = colorBIn / 255
+
+def setColorRGB (colorRIn, colorGIn, colorBIn):
+    if colorRIn > 1 or colorGIn > 1 or colorBIn > 1:
+        print ("WRONG COLOR FUNCTION USED (0..1 instead of 0..255)")
+    else:
+        global colorR, colorG, colorB
+
+        colorR = colorRIn
+        colorG = colorGIn
+        colorB = colorBIn
+
+def drawSphere (xPosition, yPosition, zPosition, radius, quality):
+    glColor3f(colorR, colorG, colorB)
+
+    glPushMatrix()
+
+    glTranslatef (xPosition, yPosition, zPosition)
+    glutSolidSphere(radius, quality, quality)
+
+    glPopMatrix()
+
+def drawLine (xPosition1, yPosition1, zPosition1, xPosition2, yPosition2, zPosition2):
+    glColor3f(colorR, colorG, colorB)
+
+    glBegin(GL_LINES);
+    glVertex3f(xPosition1, yPosition1, zPosition1);
+    glVertex3f(xPosition2, yPosition2, zPosition2);
+    glEnd();    
