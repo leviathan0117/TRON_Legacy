@@ -5,32 +5,48 @@ from PIL import Image
 import sys
 import math
 
-######################################## CAMERA:
-cameraMode = 0
+##### Code structure:
+# constants declaration
+# variables declaration 
+# local varibles declaration - their use outside TRON library is unlikely
+# function declaration
 
+################################################################################ CONSTANTS:
+#!!!!! CONSTANTS WORK ONLY WITHIN DEFAULT FUNCTIONS !!!!!
+
+# Makes camera revolve around a certain point
+CONST_CameraRevolve = 1
+# Makes camera look around FROM a specific point
+CONST_CameraLookAround = 2
+# Makes camera move in a plane - WASD keys are for changin plane coordinates, C or SPACE for rising/lowing down the plane
+CONST_MoveField = 1
+
+################################################################################ Variables:
+
+######################################## CAMERA:
+cameraMode = CONST_CameraRevolve
+cameraAngle1 = 0
+cameraAngle2 = 0
 # Camera position in (X, Y, Z)
 cameraPosX = 0
 cameraPosY = 0
 cameraPosZ = 0
-
 # Point at which the camera looks in (X, Y, Z)
 cameraLookAtX = 0
 cameraLookAtY = 0
 cameraLookAtZ = 0
-
 # Regulates how sensitive camera movement would be to mouse movement. Original value = 0.005
 cameraSensitivity = 0.005
 
 #################### Parameters for CONST_CameraRevolve (0):
-cameraAngle1 = 0
-cameraAngle2 = 0
 
-#################### Parameters for CONST_CameraFly (1):
+
+#################### Parameters for CONST_CameraLookAround (1):
 
 
 ######################################## Movement:
-movementMode = 0
-movementSpeed = 0.1
+movementMode = CONST_MoveField
+movementSpeed = 0.4
 
 # Allows / prohibits changing movement speed
 allowMovementSpeedChange = 1
@@ -44,28 +60,19 @@ colorB = 1
 printMouseButtonEvent = 0
 printMouseMoveEvent = 0
 
-######################################## CONSTANTS:
-#!!!!! CONSTANTS WORK ONLY WITHIN DEFAULT FUNCTIONS !!!!!
+################################################################################ Local variables:
+mouseXPrev = 0
+mouseYPrev = 0
 
-# Makes camera revolve around a certain point
-CONST_CameraRevolve = 0 
+################################################################################ FUNCTIONS:
 
-# Makes camera look around FROM a specific point
-CONST_CameraLookAroung = 1
+def concatenateFunctions (funcs):
+    def func(funcs = funcs):
+        for f in funcs:
+            f()
+    return func
 
-# Makes camera move in a plane - WASD keys are for changin plane coordinates, C or SPACE for rising/lowing down the plane
-CONST_MoveField = 0
-
-def init ():
-    glClearColor (0.0, 0.0, 0.0, 0.0)
-    glClearDepth (1.0) 
-    glDepthFunc (GL_LEQUAL)
-    glEnable (GL_DEPTH_TEST)
-    glEnable (GL_TEXTURE_2D)
-    glHint (GL_POLYGON_SMOOTH_HINT,         GL_NICEST)
-    glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-
-def loadTexture (fileName):
+def loadTexture (fileName): # This DOES work but isn't implemented yet
     image  = Image.open (fileName)
     width  = image.size [0]
     height = image.size [1]
@@ -82,68 +89,7 @@ def loadTexture (fileName):
     
     return texture
 
-# TODO: find out why only one keyboard button can work at a time
-def keyboardFunction ( *args ):
-    if args [0] == b'\x1b':
-        sys.exit ()
-
-    global cameraPosX, cameraPosY, cameraPosZ
-    global cameraLookAtX, cameraLookAtY, cameraLookAtZ
-    global cameraMode, movementMode
-    global movementSpeed, allowMovementSpeedChange
-
-    # TODO: prove this should work theoretically:
-    if movementMode == 0:
-        if args [0] == b'w':
-            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
-            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
-        if args [0] == b's':
-            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
-            cameraLookAtX += movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
-        if args [0] == b'd':
-            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1)
-            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1)
-        if args [0] == b'a':
-            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1)
-            cameraLookAtX += movementSpeed * math.sin(cameraAngle1)
-        if args [0] == b'c':
-            cameraLookAtY += movementSpeed
-        if args [0] == b' ':
-            cameraLookAtY -= movementSpeed
-        if args [0] == b'e' and allowMovementSpeedChange:
-            movementSpeed += 0.01
-        if args [0] == b'q' and allowMovementSpeedChange:
-            movementSpeed -= 0.01
-            if movementSpeed < 0:
-                movementSpeed = 0
-
-
-    if cameraMode == 1:
-        if args [0] == b'w':
-            cameraPosZ += 0.1
-        if args [0] == b's':
-            cameraPosZ -= 0.1
-        if args [0] == b'd':
-            cameraPosX += 0.1
-        if args [0] == b'a':
-            cameraPosX -= 0.1
-        if args [0] == b'c':
-            cameraPosY += 0.1
-        if args [0] == b' ':
-            cameraPosY -= 0.1
-        cameraLookAtX = cameraPosX
-        cameraLookAtY = cameraPosY
-        cameraLookAtZ = cameraPosZ + 1
-
-def reshapeFunction (width, height):
-    glViewport     (0, 0, width, height)
-    glMatrixMode   (GL_PROJECTION)
-    glLoadIdentity ()
-    gluPerspective (60.0, float(width)/float (height), 1.0, 60.0)
-    glMatrixMode   (GL_MODELVIEW)
-    glLoadIdentity ()
-
-def doTheMagic ():
+def displayAndCameraSetting ():
     glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode   (GL_MODELVIEW)
     glLoadIdentity ()
@@ -152,32 +98,21 @@ def doTheMagic ():
     global cameraPosX, cameraPosY, cameraPosZ
     global cameraLookAtX, cameraLookAtY, cameraLookAtZ
 
-    lx = -math.cos(cameraAngle1) * math.cos(cameraAngle2)
-    ly = math.sin(cameraAngle2)
-    lz = math.sin(cameraAngle1) * math.cos(cameraAngle2)
-    cameraPosX = cameraLookAtX + lx * 4
-    cameraPosY = cameraLookAtY + ly * 4
-    cameraPosZ = cameraLookAtZ + lz * 4
+    if cameraMode == CONST_CameraRevolve:
+        lx = -math.cos(cameraAngle1) * math.cos(cameraAngle2)
+        ly = math.sin(cameraAngle2)
+        lz = math.sin(cameraAngle1) * math.cos(cameraAngle2)
+        cameraPosX = cameraLookAtX + lx * 4
+        cameraPosY = cameraLookAtY + ly * 4
+        cameraPosZ = cameraLookAtZ + lz * 4
+    
+    if cameraMode != 0:
+        gluLookAt (cameraPosX, cameraPosY, cameraPosZ,
+                    cameraLookAtX, cameraLookAtY, cameraLookAtZ,
+                    0, -1, 0)
 
-    gluLookAt (cameraPosX, cameraPosY, cameraPosZ,
-                cameraLookAtX, cameraLookAtY, cameraLookAtZ,
-                0, -1, 0)
-
-def doTheMagic2 ():
+def displayEnd ():
     glutSwapBuffers ()
-
-def pointCamera (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ):
-    glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glMatrixMode   (GL_MODELVIEW)
-    glLoadIdentity ()
-    gluLookAt (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ, 0, -1, 0)
-
-def idleFunction ():
-    glutPostRedisplay ()
-
-
-mouseXPrev = -12345789
-mouseYPrev = -12345789
 
 #Default function for mouse button events:
 def mouseButtonFunction (buttonID, buttonState, mouseX, mouseY):
@@ -219,14 +154,75 @@ def mouseMoveFunction (mouseX, mouseY):
     if printMouseMoveEvent:
         print("Mouse moved || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
 
-def Prepare (windowName, windowSizeX, windowSizeY, displayFunction, keyboardFunction, mouseButtonFunction, mouseMoveFunction, windowPositionX, windowPositionY):
+# TODO: find out why only one keyboard button can work at a time
+def keyboardFunction ( *args ):
+    if args [0] == b'\x1b':
+        sys.exit ()
+
+    global cameraPosX, cameraPosY, cameraPosZ
+    global cameraLookAtX, cameraLookAtY, cameraLookAtZ
+    global cameraMode, movementMode
+    global movementSpeed, allowMovementSpeedChange
+
+    # TODO: prove this should work theoretically:
+    if movementMode == CONST_MoveField:
+        if args [0] == b'w':
+            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
+            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
+        if args [0] == b's':
+            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
+            cameraLookAtX += movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
+        if args [0] == b'd':
+            cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1)
+            cameraLookAtX -= movementSpeed * math.sin(cameraAngle1)
+        if args [0] == b'a':
+            cameraLookAtZ += movementSpeed * math.cos(cameraAngle1)
+            cameraLookAtX += movementSpeed * math.sin(cameraAngle1)
+        if args [0] == b'c':
+            cameraLookAtY += movementSpeed
+        if args [0] == b' ':
+            cameraLookAtY -= movementSpeed
+        if args [0] == b'e' and allowMovementSpeedChange:
+            movementSpeed += 0.01
+        if args [0] == b'q' and allowMovementSpeedChange:
+            movementSpeed -= 0.01
+            if movementSpeed < 0:
+                movementSpeed = 0
+
+def pointCamera (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ):
+    glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode   (GL_MODELVIEW)
+    glLoadIdentity ()
+    gluLookAt (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ, 0, -1, 0)
+
+def idleFunction ():
+    glutPostRedisplay ()
+
+def init ():
+    glClearColor (0.0, 0.0, 0.0, 0.0)
+    glClearDepth (1.0) 
+    glDepthFunc (GL_LEQUAL)
+    glEnable (GL_DEPTH_TEST)
+    glEnable (GL_TEXTURE_2D)
+    glHint (GL_POLYGON_SMOOTH_HINT,         GL_NICEST)
+    glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
+
+def reshapeFunction (width, height):
+    glViewport     (0, 0, width, height)
+    glMatrixMode   (GL_PROJECTION)
+    glLoadIdentity ()
+    gluPerspective (60.0, float(width)/float (height), 1.0, 60.0)
+    glMatrixMode   (GL_MODELVIEW)
+    glLoadIdentity ()
+
+def Prepare (windowName, windowSizeX, windowSizeY, userDisplayFunction, keyboardFunction, mouseButtonFunction, mouseMoveFunction, windowPositionX = 100, windowPositionY = 100):
     glutInit (sys.argv)
     glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize (windowSizeX, windowSizeY)
     glutInitWindowPosition (windowPositionX, windowPositionY)
-
+    
     glutCreateWindow (windowName)
-    glutDisplayFunc (displayFunction)
+    glutDisplayFunc (concatenateFunctions([displayAndCameraSetting, userDisplayFunction, displayEnd]))
     glutIdleFunc (idleFunction)
     glutReshapeFunc (reshapeFunction)
     glutKeyboardFunc (keyboardFunction)

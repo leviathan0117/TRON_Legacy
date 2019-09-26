@@ -1,12 +1,10 @@
-# TRON (v0.0.3)
+# TRON (v0.0.4-structure update)
 A simple Python 3D graphics library based on OpenGL. Created to allow easier development of small Python 3D programs.
 
 ## What's new (from previous version):
-* Camera sensitivity
-* Color changing (through variables or with function) 
-* Line-drawing function
-* 'Plane' movement type
-* Movement speed and lockable speed change
+* A bit of code-prettifying
+* Now, user's display function is automatically inserted between displayAndCameraSetting() and displayEnd() functions. displayAndCameraSetting() function can be controlled with various variables (e.g. TRON.cameraMode)
+* This update was originally proposed to be a lot bigger, but unfortunatelly some things to code structure are hugely hard to implement, so were left for further updates
 
 ## Warning
 Until version 0.1.0 - code structure, names and function implementations may change chaotically. Verion in README.md may not be updated.
