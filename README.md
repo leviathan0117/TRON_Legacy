@@ -1,10 +1,9 @@
-# TRON (v0.0.4-structure update)
+# TRON (v0.0.4-structure update(v2))
 A simple Python 3D graphics library based on OpenGL. Created to allow easier development of small Python 3D programs.
 
 ## What's new (from previous version):
 * A bit of code-prettifying
-* Now, user's display function is automatically inserted between displayAndCameraSetting() and displayEnd() functions. displayAndCameraSetting() function can be controlled with various variables (e.g. TRON.cameraMode)
-* This update was originally proposed to be a lot bigger, but unfortunatelly some things to code structure are hugely hard to implement, so were left for further updates
+* Now, keyboard, mouse, and display default functions are ALWAYS CALLED. All user's functions are added to the default functions using 'TRON.concatenateFunctions()'. To turn default functions offline, or change their behavior, controll variables like 'TRON.cameraMode' are adjusted. If user wishes to add nothing to default functions, 'None' should be sent as a parameter in 'TRON.Prepare()'
 
 ## Warning
 Until version 0.1.0 - code structure, names and function implementations may change chaotically. Verion in README.md may not be updated.

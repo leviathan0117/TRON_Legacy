@@ -66,10 +66,11 @@ mouseYPrev = 0
 
 ################################################################################ FUNCTIONS:
 
-def concatenateFunctions (funcs):
-    def func(funcs = funcs):
-        for f in funcs:
-            f()
+def concatenateFunctions (*functions):
+    def func (*args):
+        for function in functions:
+            if callable(function):
+                function (*args)
     return func
 
 def loadTexture (fileName): # This DOES work but isn't implemented yet
@@ -190,8 +191,8 @@ def keyboardFunction ( *args ):
                 movementSpeed = 0
 
 def pointCamera (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ):
-    glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glMatrixMode   (GL_MODELVIEW)
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode (GL_MODELVIEW)
     glLoadIdentity ()
     gluLookAt (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ, 0, -1, 0)
 
@@ -208,26 +209,26 @@ def init ():
     glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
 def reshapeFunction (width, height):
-    glViewport     (0, 0, width, height)
-    glMatrixMode   (GL_PROJECTION)
+    glViewport (0, 0, width, height)
+    glMatrixMode (GL_PROJECTION)
     glLoadIdentity ()
-    gluPerspective (60.0, float(width)/float (height), 1.0, 60.0)
-    glMatrixMode   (GL_MODELVIEW)
+    gluPerspective (60.0, float(width) / float (height), 1.0, 60.0)
+    glMatrixMode (GL_MODELVIEW)
     glLoadIdentity ()
 
-def Prepare (windowName, windowSizeX, windowSizeY, userDisplayFunction, keyboardFunction, mouseButtonFunction, mouseMoveFunction, windowPositionX = 100, windowPositionY = 100):
+def Prepare (windowName, windowSizeX, windowSizeY, userDisplayFunction, userKeyboardFunction, userMouseButtonFunction, userMouseMoveFunction, windowPositionX = 100, windowPositionY = 100):
     glutInit (sys.argv)
     glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize (windowSizeX, windowSizeY)
     glutInitWindowPosition (windowPositionX, windowPositionY)
     
     glutCreateWindow (windowName)
-    glutDisplayFunc (concatenateFunctions([displayAndCameraSetting, userDisplayFunction, displayEnd]))
+    glutDisplayFunc (concatenateFunctions (displayAndCameraSetting, userDisplayFunction, displayEnd))
     glutIdleFunc (idleFunction)
     glutReshapeFunc (reshapeFunction)
-    glutKeyboardFunc (keyboardFunction)
-    glutMouseFunc(mouseButtonFunction)
-    glutMotionFunc(mouseMoveFunction)
+    glutKeyboardFunc (concatenateFunctions (keyboardFunction, userKeyboardFunction))
+    glutMouseFunc (concatenateFunctions (mouseButtonFunction, userMouseButtonFunction))
+    glutMotionFunc (concatenateFunctions (mouseMoveFunction, userMouseMoveFunction))
 
 def Launch ():
     init ()
