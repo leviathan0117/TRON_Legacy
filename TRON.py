@@ -46,7 +46,7 @@ cameraSensitivity = 0.005
 
 ######################################## Movement:
 movementMode = CONST_MoveField
-movementSpeed = 0.4
+movementSpeed = 0.2
 
 # Allows / prohibits changing movement speed
 allowMovementSpeedChange = 1
@@ -90,28 +90,6 @@ def loadTexture (fileName): # This DOES work but isn't implemented yet
     
     return texture
 
-def displayAndCameraSetting ():
-    glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glMatrixMode   (GL_MODELVIEW)
-    glLoadIdentity ()
-
-    global cameraAngle1, cameraAngle2
-    global cameraPosX, cameraPosY, cameraPosZ
-    global cameraLookAtX, cameraLookAtY, cameraLookAtZ
-
-    if cameraMode == CONST_CameraRevolve:
-        lx = -math.cos(cameraAngle1) * math.cos(cameraAngle2)
-        ly = math.sin(cameraAngle2)
-        lz = math.sin(cameraAngle1) * math.cos(cameraAngle2)
-        cameraPosX = cameraLookAtX + lx * 4
-        cameraPosY = cameraLookAtY + ly * 4
-        cameraPosZ = cameraLookAtZ + lz * 4
-    
-    if cameraMode != 0:
-        gluLookAt (cameraPosX, cameraPosY, cameraPosZ,
-                    cameraLookAtX, cameraLookAtY, cameraLookAtZ,
-                    0, -1, 0)
-
 def displayEnd ():
     glutSwapBuffers ()
 
@@ -129,6 +107,7 @@ def mouseButtonFunction (buttonID, buttonState, mouseX, mouseY):
             else:
                 print("Right button up", end="")
         print(" || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
+
     global mouseXPrev, mouseYPrev
     mouseXPrev = mouseX
     mouseYPrev = mouseY
@@ -149,46 +128,125 @@ def mouseMoveFunction (mouseX, mouseY):
         cameraAngle2 = math.pi / 2 - 0.01
     elif cameraAngle2 <= -math.pi / 2 + 0.01:
         cameraAngle2 = -math.pi / 2 + 0.01
+
     mouseXPrev = mouseX
     mouseYPrev = mouseY
 
     if printMouseMoveEvent:
         print("Mouse moved || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
 
-# TODO: find out why only one keyboard button can work at a time
-def keyboardFunction ( *args ):
+
+# Temporary here for faster library development
+# TODO: remove from here
+
+keyState = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0, 'j': 0, 'k': 0, 'l': 0, 'm': 0, 'n': 0, 'o': 0, 'p': 0, 'q': 0, 'r': 0, 's': 0, 't': 0, 'u': 0, 'v': 0, 'w': 0, 'x': 0, 'y': 0, 'z': 0, ' ': 0}
+
+def keyboardFunction (*args):
     if args [0] == b'\x1b':
         sys.exit ()
 
+    global keyState
+
+    if args [0] == b'w':
+        keyState['w'] = 1
+    if args [0] == b's':
+        keyState['s'] = 1
+    if args [0] == b'd':
+        keyState['d'] = 1
+    if args [0] == b'a':
+        keyState['a'] = 1
+    if args [0] == b'c':
+        keyState['c'] = 1
+    if args [0] == b' ':
+        keyState[' '] = 1
+    if args [0] == b'e':
+        keyState['e'] = 1
+    if args [0] == b'q':
+        keyState['q'] = 1
+    if args [0] == b'p':
+        keyState['p'] = 1
+
+def keyboardUpFunction (*args):
+    if args [0] == b'\x1b':
+        sys.exit ()
+
+    global keyState
+
+    if args [0] == b'w':
+        keyState['w'] = 0
+    if args [0] == b's':
+        keyState['s'] = 0
+    if args [0] == b'd':
+        keyState['d'] = 0
+    if args [0] == b'a':
+        keyState['a'] = 0
+    if args [0] == b'c':
+        keyState['c'] = 0
+    if args [0] == b' ':
+        keyState[' '] = 0
+    if args [0] == b'e':
+        keyState['e'] = 0
+    if args [0] == b'q':
+        keyState['q'] = 0
+    if args [0] == b'p':
+        keyState['p'] = 0
+
+def processKey ():
     global cameraPosX, cameraPosY, cameraPosZ
     global cameraLookAtX, cameraLookAtY, cameraLookAtZ
     global cameraMode, movementMode
     global movementSpeed, allowMovementSpeedChange
+    global keyState
 
-    # TODO: prove this should work theoretically:
     if movementMode == CONST_MoveField:
-        if args [0] == b'w':
+        if keyState['w']:
             cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
             cameraLookAtX -= movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
-        if args [0] == b's':
+        if keyState['s']:
             cameraLookAtZ += movementSpeed * math.cos(cameraAngle1 - math.pi / 2)
             cameraLookAtX += movementSpeed * math.sin(cameraAngle1 - math.pi / 2)
-        if args [0] == b'd':
+        if keyState['d']:
             cameraLookAtZ -= movementSpeed * math.cos(cameraAngle1)
             cameraLookAtX -= movementSpeed * math.sin(cameraAngle1)
-        if args [0] == b'a':
+        if keyState['a']:
             cameraLookAtZ += movementSpeed * math.cos(cameraAngle1)
             cameraLookAtX += movementSpeed * math.sin(cameraAngle1)
-        if args [0] == b'c':
+        if keyState['c']:
             cameraLookAtY += movementSpeed
-        if args [0] == b' ':
+        if keyState[' ']:
             cameraLookAtY -= movementSpeed
-        if args [0] == b'e' and allowMovementSpeedChange:
+        if keyState['e'] and allowMovementSpeedChange:
             movementSpeed += 0.01
-        if args [0] == b'q' and allowMovementSpeedChange:
+        if keyState['q'] and allowMovementSpeedChange:
             movementSpeed -= 0.01
             if movementSpeed < 0:
                 movementSpeed = 0
+
+def processCamera ():
+    global cameraAngle1, cameraAngle2
+    global cameraPosX, cameraPosY, cameraPosZ
+    global cameraLookAtX, cameraLookAtY, cameraLookAtZ
+
+    if cameraMode == CONST_CameraRevolve:
+        lx = -math.cos(cameraAngle1) * math.cos(cameraAngle2)
+        ly = math.sin(cameraAngle2)
+        lz = math.sin(cameraAngle1) * math.cos(cameraAngle2)
+        cameraPosX = cameraLookAtX + lx * 4
+        cameraPosY = cameraLookAtY + ly * 4
+        cameraPosZ = cameraLookAtZ + lz * 4
+    
+    if cameraMode != 0:
+        gluLookAt (cameraPosX, cameraPosY, cameraPosZ,
+                    cameraLookAtX, cameraLookAtY, cameraLookAtZ,
+                    0, -1, 0)
+
+def displaySetting ():
+    glClear        (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode   (GL_MODELVIEW)
+    glLoadIdentity ()
+
+    processKey()
+    processCamera()
 
 def pointCamera (eyeX, eyeY, eyeZ, lookPointX, lookPointY, lookPointZ):
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -215,18 +273,19 @@ def reshapeFunction (width, height):
     gluPerspective (60.0, float(width) / float (height), 1.0, 60.0)
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity ()
-
+    
 def Prepare (windowName, windowSizeX, windowSizeY, userDisplayFunction, userKeyboardFunction, userMouseButtonFunction, userMouseMoveFunction, windowPositionX = 100, windowPositionY = 100):
     glutInit (sys.argv)
     glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
     glutInitWindowSize (windowSizeX, windowSizeY)
-    glutInitWindowPosition (windowPositionX, windowPositionY)
+    glutInitWindowPosition (windowPositionX, windowPositionY) 
     
     glutCreateWindow (windowName)
-    glutDisplayFunc (concatenateFunctions (displayAndCameraSetting, userDisplayFunction, displayEnd))
+    glutDisplayFunc (concatenateFunctions (displaySetting, userKeyboardFunction, userDisplayFunction, displayEnd))
     glutIdleFunc (idleFunction)
     glutReshapeFunc (reshapeFunction)
-    glutKeyboardFunc (concatenateFunctions (keyboardFunction, userKeyboardFunction))
+    glutKeyboardFunc (keyboardFunction)
+    glutKeyboardUpFunc (keyboardUpFunction)
     glutMouseFunc (concatenateFunctions (mouseButtonFunction, userMouseButtonFunction))
     glutMotionFunc (concatenateFunctions (mouseMoveFunction, userMouseMoveFunction))
 

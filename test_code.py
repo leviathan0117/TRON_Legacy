@@ -11,9 +11,9 @@ def display ():
             TRON.setColorRGB(x / sz, z / sz, blue)
             TRON.drawSphere(x-sz/2, 0, z-sz/2, 0.3, 5)  
 
-def aditionalKeyboardHandle(*args):
-	if args[0] == b'p':
-		print("Hello world!")
+def aditionalKeyboardHandle():
+    if TRON.keyState['p']:
+        print("Hello world!")
 
 TRON.Prepare ("TRON example", 1280, 720, display, aditionalKeyboardHandle, None, None, 100, 100)
 
