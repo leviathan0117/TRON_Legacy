@@ -147,24 +147,58 @@ def keyboardFunction (*args):
 
     global keyState
 
-    if args [0] == b'w':
-        keyState['w'] = 1
-    if args [0] == b's':
-        keyState['s'] = 1
-    if args [0] == b'd':
-        keyState['d'] = 1
     if args [0] == b'a':
         keyState['a'] = 1
+    if args [0] == b'b':
+        keyState['b'] = 1
     if args [0] == b'c':
         keyState['c'] = 1
-    if args [0] == b' ':
-        keyState[' '] = 1
+    if args [0] == b'd':
+        keyState['d'] = 1
     if args [0] == b'e':
         keyState['e'] = 1
-    if args [0] == b'q':
-        keyState['q'] = 1
+    if args [0] == b'f':
+        keyState['f'] = 1
+    if args [0] == b'g':
+        keyState['g'] = 1
+    if args [0] == b'h':
+        keyState['h'] = 1
+    if args [0] == b'i':
+        keyState['i'] = 1
+    if args [0] == b'j':
+        keyState['j'] = 1
+    if args [0] == b'k':
+        keyState['k'] = 1
+    if args [0] == b'l':
+        keyState['l'] = 1
+    if args [0] == b'm':
+        keyState['m'] = 1
+    if args [0] == b'n':
+        keyState['n'] = 1
+    if args [0] == b'o':
+        keyState['o'] = 1
     if args [0] == b'p':
         keyState['p'] = 1
+    if args [0] == b'q':
+        keyState['q'] = 1
+    if args [0] == b'r':
+        keyState['r'] = 1
+    if args [0] == b's':
+        keyState['s'] = 1
+    if args [0] == b't':
+        keyState['t'] = 1
+    if args [0] == b'u':
+        keyState['u'] = 1
+    if args [0] == b'v':
+        keyState['v'] = 1
+    if args [0] == b'w':
+        keyState['w'] = 1
+    if args [0] == b'x':
+        keyState['x'] = 1
+    if args [0] == b'y':
+        keyState['y'] = 1
+    if args [0] == b'z':
+        keyState['z'] = 1
 
 def keyboardUpFunction (*args):
     if args [0] == b'\x1b':
@@ -172,24 +206,58 @@ def keyboardUpFunction (*args):
 
     global keyState
 
-    if args [0] == b'w':
-        keyState['w'] = 0
-    if args [0] == b's':
-        keyState['s'] = 0
-    if args [0] == b'd':
-        keyState['d'] = 0
     if args [0] == b'a':
         keyState['a'] = 0
+    if args [0] == b'b':
+        keyState['b'] = 0
     if args [0] == b'c':
         keyState['c'] = 0
-    if args [0] == b' ':
-        keyState[' '] = 0
+    if args [0] == b'd':
+        keyState['d'] = 0
     if args [0] == b'e':
         keyState['e'] = 0
-    if args [0] == b'q':
-        keyState['q'] = 0
+    if args [0] == b'f':
+        keyState['f'] = 0
+    if args [0] == b'g':
+        keyState['g'] = 0
+    if args [0] == b'h':
+        keyState['h'] = 0
+    if args [0] == b'i':
+        keyState['i'] = 0
+    if args [0] == b'j':
+        keyState['j'] = 0
+    if args [0] == b'k':
+        keyState['k'] = 0
+    if args [0] == b'l':
+        keyState['l'] = 0
+    if args [0] == b'm':
+        keyState['m'] = 0
+    if args [0] == b'n':
+        keyState['n'] = 0
+    if args [0] == b'o':
+        keyState['o'] = 0
     if args [0] == b'p':
         keyState['p'] = 0
+    if args [0] == b'q':
+        keyState['q'] = 0
+    if args [0] == b'r':
+        keyState['r'] = 0
+    if args [0] == b's':
+        keyState['s'] = 0
+    if args [0] == b't':
+        keyState['t'] = 0
+    if args [0] == b'u':
+        keyState['u'] = 0
+    if args [0] == b'v':
+        keyState['v'] = 0
+    if args [0] == b'w':
+        keyState['w'] = 0
+    if args [0] == b'x':
+        keyState['x'] = 0
+    if args [0] == b'y':
+        keyState['y'] = 0
+    if args [0] == b'z':
+        keyState['z'] = 0
 
 def processKey ():
     global cameraPosX, cameraPosY, cameraPosZ
