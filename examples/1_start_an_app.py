@@ -14,7 +14,7 @@ def display():
 
 #Create an app named "Example 1 - start an app", with window size 1280*720,
 #	and 'display' function as drawing function
-TRON.Prepare ("Example 1 - start an app", 1280, 720, display)
+TRON.Prepare (b"Example 1 - start an app", 1280, 720, display)
 
 #Look at point 1.5, 1, 1.5
 TRON.cameraLookAtX = 1.5

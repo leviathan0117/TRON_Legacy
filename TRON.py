@@ -46,7 +46,7 @@ cameraSensitivity = 0.005
 
 ######################################## Movement:
 movementMode = CONST_MoveField
-movementSpeed = 0.2
+movementSpeed = 0.3
 
 # Allows / prohibits changing movement speed
 allowMovementSpeedChange = 1

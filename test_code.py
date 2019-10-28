@@ -28,9 +28,9 @@ def aditionalKeyboardHandle():
     if TRON.keyState['p']:
         print("Hello world!")
 
-TRON.Prepare ("TRON example", 1280, 720, display, aditionalKeyboardHandle, None, None, 100, 100)
+TRON.Prepare (b"TRON example", 1280, 720, display, aditionalKeyboardHandle, None, None, 100, 100)
 
-TRON.cameraLookAtY = -30
+TRON.cameraLookAtY = -20
 TRON.cameraAngle2 = -math.pi/2+0.01
 
 TRON.Launch()
