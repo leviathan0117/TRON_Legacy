@@ -11,12 +11,19 @@ angleSpeed = 0
 
 def display ():
     sz = 10
-    TRON.cameraAngle1 -= angleSpeed
     for x in range (sz):
         for z in range (sz):
             for y in range(sz):
                 TRON.setColorRGB(x / sz, z / sz, 1 - y / sz)
-                TRON.drawSphere(x-sz/2, y-sz/2, z-sz/2, 0.3, 10)
+                #TRON.drawSphere(x-sz/2, y-sz/2, z-sz/2, 1, 10)
+                TRON.drawBox(x - sz / 2, y - sz / 2, z - sz / 2, 1)
+
+
+    #TRON.setColorRGB(0, 1, 1)
+    #TRON.drawBox(0, 0, 0, 3)
+
+
+    TRON.cameraAngle1 -= angleSpeed
 
     global counter, start_time, interval
     counter += 1

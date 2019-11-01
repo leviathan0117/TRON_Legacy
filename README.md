@@ -8,6 +8,7 @@ A simple Python 3D graphics library based on OpenGL. Created to allow easier dev
 * New mode of movement (CONST_MoveAround)
 * New mode of viewing (CONST_CameraLookAround) 
 * Code style improvements (PEP8 will never be reached =) )
+* New drawing functions
 
 ## Warning
 Until version 0.1.0 - code structure, names and function implementations may change chaotically. Verion in README.md may not be updated.
