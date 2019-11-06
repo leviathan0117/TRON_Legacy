@@ -1,9 +1,7 @@
 import TRON
 import time
 
-start_time = time.time()
-interval = 2 # displays the frame rate every 2 seconds
-counter = 0
+FPSMeter = TRON.FPS(2)
 
 angleSpeed = 0
 
@@ -19,12 +17,7 @@ def display ():
 
     TRON.cameraAngle1 -= angleSpeed
 
-    global counter, start_time, interval
-    counter += 1
-    if (time.time() - start_time) > interval:
-        print("FPS: ", counter / (time.time() - start_time))
-        counter = 0
-        start_time = time.time()
+    FPSMeter.updateAndPrint()
 
 def aditionalKeyboardHandle():
     global angleSpeed

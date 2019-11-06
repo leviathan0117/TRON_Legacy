@@ -4,6 +4,7 @@ from OpenGL.GLUT import *
 from PIL import Image
 import sys
 import math
+import time
 
 ##### Code structure:
 # constants declaration
@@ -67,6 +68,30 @@ printMouseWheelEvent = 0
 mouseXPrev = 0
 mouseYPrev = 0
 
+
+################################################################################ CLASSES:
+
+class FPS:
+    def __init__(self, userInterval):
+        self.startTime = time.time()
+        self.interval = userInterval
+        self.counter = 0
+
+    def update(self):
+        self.counter += 1
+
+    def printFPS(self):
+        if (time.time() - self.startTime) > self.interval:
+            print("FPS: ", self.counter / (time.time() - self.startTime))
+            self.counter = 0
+            self.startTime = time.time()
+
+    def updateAndPrint(self):
+        self.counter += 1
+        if (time.time() - self.startTime) > self.interval:
+            print("FPS: ", self.counter / (time.time() - self.startTime))
+            self.counter = 0
+            self.startTime = time.time()
 
 ################################################################################ FUNCTIONS:
 
