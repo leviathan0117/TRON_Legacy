@@ -20,7 +20,7 @@ CONST_CameraRevolve = 1
 CONST_CameraLookAround = 2
 # Makes camera move in a plane - WASD keys are for changin plane coordinates, C or SPACE for rising/lowing down the plane
 CONST_MoveField = 1
-#Standart movement - goes where the camera points (works only with lookAround camera mode)
+# Standart movement - goes where the camera points (works only with lookAround camera mode)
 CONST_MoveAround = 2
 
 ################################################################################ Variables:
@@ -102,37 +102,33 @@ def displayEnd():
 
 
 # Default function for mouse button events:
-def mouseButtonFunction(buttonID, buttonState, mouseX, mouseY):
+def mouseEventFunction(eventID, eventState, mouseX, mouseY):
+    print(eventID, eventState, mouseX, mouseY)
+    # TODO: Make this print work as it should
     if printMouseButtonEvent:
-        if buttonID == GLUT_LEFT_BUTTON:
-            if buttonState == GLUT_DOWN:
+        if eventID == GLUT_LEFT_BUTTON:
+            if eventState == GLUT_DOWN:
                 print("Left button down", end="")
             else:
                 print("Left button up", end="")
         else:
-            if buttonState == GLUT_DOWN:
+            if eventState == GLUT_DOWN:
                 print("Right button down", end="")
             else:
                 print("Right button up", end="")
         print(" || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
 
-    global mouseXPrev, mouseYPrev
+    global mouseXPrev, mouseYPrev, cameraDistanceToObject
     mouseXPrev = mouseX
     mouseYPrev = mouseY
 
-# Default wheel function
-def mouseWheelFunction(mouseWheelID, mouseWheelDirection, mouseX, mouseY):
-    if printMouseWheelEvent:
-        print("Mouse wheel turned || Wheel ID: " + str(mouseWheelID), end="")
-        print(" | Direction: " + str(mouseWheelDirection), end="")
-        print(" | Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
-
-    global cameraDistanceToObject
-
-    if cameraMode == CONST_CameraRevolve:
-        cameraDistanceToObject += mouseWheelDirection * -1.5
-        if cameraDistanceToObject < 1:
-            cameraDistanceToObject = 1
+    if eventID == 3 or eventID == 4:  # mouse wheel movement
+        if eventState == 1:  # since wheel stops right after it starts, we have to check that we do the processing only once
+            if cameraMode == CONST_CameraRevolve:
+                wheelRotationDirection = (7 - eventID * 2)
+                cameraDistanceToObject += wheelRotationDirection * -1.5
+                if cameraDistanceToObject < 1:
+                    cameraDistanceToObject = 1
 
 
 # Default function for mouse movements(if any button pressed):
@@ -411,6 +407,7 @@ def init():
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
+
 def reshapeFunction(width, height):
     glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
@@ -421,7 +418,7 @@ def reshapeFunction(width, height):
 
 
 def Prepare(windowName, windowSizeX, windowSizeY, userDisplayFunction, userKeyboardFunction=None,
-            userMouseButtonFunction=None, userMouseMoveFunction=None, userMouseWheelFunction=None, windowPositionX=100,
+            userMouseEventFunction=None, userMouseMoveFunction=None, windowPositionX=100,
             windowPositionY=100):
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
@@ -434,8 +431,7 @@ def Prepare(windowName, windowSizeX, windowSizeY, userDisplayFunction, userKeybo
     glutReshapeFunc(reshapeFunction)
     glutKeyboardFunc(keyboardFunction)
     glutKeyboardUpFunc(keyboardUpFunction)
-    glutMouseFunc(concatenateFunctions(mouseButtonFunction, userMouseButtonFunction))
-    glutMouseWheelFunc(concatenateFunctions(mouseWheelFunction, userMouseWheelFunction))
+    glutMouseFunc(concatenateFunctions(mouseEventFunction, userMouseEventFunction))
     glutMotionFunc(concatenateFunctions(mouseMoveFunction, userMouseMoveFunction))
 
 
@@ -473,6 +469,7 @@ def drawSphere(xPosition, yPosition, zPosition, radius, quality):
     glutSolidSphere(radius, quality, quality)
     glPopMatrix()
 
+
 def drawWireSphere(xPosition, yPosition, zPosition, radius, quality):
     glColor3f(colorR, colorG, colorB)
 
@@ -489,6 +486,7 @@ def drawLine(xPosition1, yPosition1, zPosition1, xPosition2, yPosition2, zPositi
     glVertex3f(xPosition1, yPosition1, zPosition1)
     glVertex3f(xPosition2, yPosition2, zPosition2)
     glEnd()
+
 
 def drawBox(xPosition, yPosition, zPosition, boxSize):
     glColor3f(colorR, colorG, colorB)
