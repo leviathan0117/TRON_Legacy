@@ -10,7 +10,7 @@ def display():
 	TRON.drawLine(1, 1, 2, 1, 1, 1)
 
 	#A sphere with radius 0.3 and quality 50
-	TRON.drawSphere(1.5, 1, 1.5, 0.3, 50)
+	TRON.drawWireSphere(1.5, 1, 1.5, 0.3, 20)
 
 #Create an app named "Example 1 - start an app", with window size 1280*720,
 #	and 'display' function as drawing function
