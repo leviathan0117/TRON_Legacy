@@ -94,6 +94,7 @@ class FPS:
             self.counter = 0
             self.startTime = time.time()
 
+
 ################################################################################ FUNCTIONS:
 
 def concatenateFunctions(*functions):
@@ -370,9 +371,9 @@ def processKey():
     if keyState[' ']:
         cameraLookAtY -= movementSpeed
         cameraPosY -= movementSpeed
-    if keyState['e'] and allowMovementSpeedChange:
+    if keyState['t'] and allowMovementSpeedChange:
         movementSpeed += 0.01
-    if keyState['q'] and allowMovementSpeedChange:
+    if keyState['y'] and allowMovementSpeedChange:
         movementSpeed -= 0.01
         if movementSpeed < 0:
             movementSpeed = 0
