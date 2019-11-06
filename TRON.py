@@ -43,6 +43,7 @@ cameraSensitivity = 0.005
 
 #################### Parameters for CONST_CameraRevolve(0):
 cameraDistanceToObject = 4
+cameraWheelSensitivity = 0.5
 
 #################### Parameters for CONST_CameraLookAround(1):
 
@@ -142,15 +143,15 @@ def mouseEventFunction(eventID, eventState, mouseX, mouseY):
                 print("Right button up", end="")
         print(" || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
 
-    global mouseXPrev, mouseYPrev, cameraDistanceToObject
+    global mouseXPrev, mouseYPrev, cameraDistanceToObject, cameraWheelSensitivity
     mouseXPrev = mouseX
     mouseYPrev = mouseY
 
     if eventID == 3 or eventID == 4:  # mouse wheel movement
         if eventState == 1:  # since wheel stops right after it starts, we have to check that we do the processing only once
             if cameraMode == CONST_CameraRevolve:
-                wheelRotationDirection = (7 - eventID * 2)
-                cameraDistanceToObject += wheelRotationDirection * -1.5
+                wheelRotationDirection = (eventID * 2 - 7)
+                cameraDistanceToObject += wheelRotationDirection * cameraWheelSensitivity
                 if cameraDistanceToObject < 1:
                     cameraDistanceToObject = 1
 
@@ -159,6 +160,7 @@ def mouseEventFunction(eventID, eventState, mouseX, mouseY):
 def mouseMoveFunction(mouseX, mouseY):
     global mouseXPrev, mouseYPrev
     global cameraAngle1, cameraAngle2
+    global cameraSensitivity
 
     deltaX = mouseX - mouseXPrev
     deltaY = mouseY - mouseYPrev
