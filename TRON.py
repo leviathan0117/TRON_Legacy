@@ -103,7 +103,6 @@ def displayEnd():
 
 # Default function for mouse button events:
 def mouseEventFunction(eventID, eventState, mouseX, mouseY):
-    print(eventID, eventState, mouseX, mouseY)
     # TODO: Make this print work as it should
     if printMouseButtonEvent:
         if eventID == GLUT_LEFT_BUTTON:
