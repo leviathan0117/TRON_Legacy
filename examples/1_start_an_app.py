@@ -1,4 +1,8 @@
-#First, we import our library. (OLD VERSION!)
+#First, we enter the parent directory to import TRON library
+import sys
+sys.path.insert(1, '../')
+
+#Then, we import our library
 import TRON
 
 #Simple drawing function to start with
