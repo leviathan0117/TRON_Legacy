@@ -1,8 +1,16 @@
-# TRON (v0.0.7-??? update)
+# TRON (v0.1.0-a little of a release update)
 A simple Python 3D graphics library based on OpenGL. Created to allow easier development of small Python 3D programs.
 
 ## What's new (from previous version):
-* A few bugs solved & typos corrected
+This is the time, when this library became somewhat useful, so I think it's ready for the release.
+ 
+About future development... 
+
+Future development at this stage is quite useless, because the whole library uses classic OpenGL. This makes it's functionality HUGELY limited to CPU bottlenecks, so I'm gonna start learning modern OpenGL, which will, hopefully, give this library a chance to become something bigger. Until then - there may be small patches and updates, but don't expect this library to grow as quick as it was growing before.
+
+Wish me luck in my attempt to master modern OpenGL.. Until then...
+
+See ya :) 
 
 ## Version warning
 Until version 0.1.0 - code structure, names and function implementations may change chaotically. Version in README.md may not be updated.
