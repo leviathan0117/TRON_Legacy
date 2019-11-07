@@ -27,9 +27,9 @@ def display():
                                     colors[x + sizeCube][y + sizeCube][z + sizeCube][1],
                                     colors[x + sizeCube][y + sizeCube][z + sizeCube][2])
                 # A sphere with radius 0.3 and quality 50, positioned at (x, y, z)
-                TRON.drawSphere(x, y, z, 0.3, 50)
+                TRON.drawSphere(x, y, z, 0.3, 10)
 
-    # Print current FPS
+    # Print current FPS to console
     frameRate.updateAndPrint()
 
 
