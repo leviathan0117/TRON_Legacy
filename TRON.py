@@ -4,6 +4,7 @@ from OpenGL.GLUT import *
 from PIL import Image
 import sys
 import math
+import time
 
 ##### Code structure:
 # constants declaration
@@ -42,6 +43,7 @@ cameraSensitivity = 0.005
 
 #################### Parameters for CONST_CameraRevolve(0):
 cameraDistanceToObject = 4
+cameraWheelSensitivity = 0.5
 
 #################### Parameters for CONST_CameraLookAround(1):
 
@@ -66,6 +68,31 @@ printMouseWheelEvent = 0
 ################################################################################ Local variables:
 mouseXPrev = 0
 mouseYPrev = 0
+
+
+################################################################################ CLASSES:
+
+class FPS:
+    def __init__(self, userInterval):
+        self.startTime = time.time()
+        self.interval = userInterval
+        self.counter = 0
+
+    def update(self):
+        self.counter += 1
+
+    def printFPS(self):
+        if (time.time() - self.startTime) > self.interval:
+            print("FPS: ", self.counter / (time.time() - self.startTime))
+            self.counter = 0
+            self.startTime = time.time()
+
+    def updateAndPrint(self):
+        self.counter += 1
+        if (time.time() - self.startTime) > self.interval:
+            print("FPS: ", self.counter / (time.time() - self.startTime))
+            self.counter = 0
+            self.startTime = time.time()
 
 
 ################################################################################ FUNCTIONS:
@@ -117,15 +144,15 @@ def mouseEventFunction(eventID, eventState, mouseX, mouseY):
                 print("Right button up", end="")
         print(" || Mouse position: (" + str(mouseX) + ", " + str(mouseY) + ")")
 
-    global mouseXPrev, mouseYPrev, cameraDistanceToObject
+    global mouseXPrev, mouseYPrev, cameraDistanceToObject, cameraWheelSensitivity
     mouseXPrev = mouseX
     mouseYPrev = mouseY
 
     if eventID == 3 or eventID == 4:  # mouse wheel movement
         if eventState == 1:  # since wheel stops right after it starts, we have to check that we do the processing only once
             if cameraMode == CONST_CameraRevolve:
-                wheelRotationDirection = (7 - eventID * 2)
-                cameraDistanceToObject += wheelRotationDirection * -1.5
+                wheelRotationDirection = (eventID * 2 - 7)
+                cameraDistanceToObject += wheelRotationDirection * cameraWheelSensitivity
                 if cameraDistanceToObject < 1:
                     cameraDistanceToObject = 1
 
@@ -134,6 +161,7 @@ def mouseEventFunction(eventID, eventState, mouseX, mouseY):
 def mouseMoveFunction(mouseX, mouseY):
     global mouseXPrev, mouseYPrev
     global cameraAngle1, cameraAngle2
+    global cameraSensitivity
 
     deltaX = mouseX - mouseXPrev
     deltaY = mouseY - mouseYPrev
@@ -343,9 +371,9 @@ def processKey():
     if keyState[' ']:
         cameraLookAtY -= movementSpeed
         cameraPosY -= movementSpeed
-    if keyState['e'] and allowMovementSpeedChange:
+    if keyState['t'] and allowMovementSpeedChange:
         movementSpeed += 0.01
-    if keyState['q'] and allowMovementSpeedChange:
+    if keyState['y'] and allowMovementSpeedChange:
         movementSpeed -= 0.01
         if movementSpeed < 0:
             movementSpeed = 0
