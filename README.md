@@ -30,8 +30,5 @@ To install OpenGL in Python simply run in terminal (you may want to activate you
 
     $ pip3 install PyOpenGL
 
-## Examples
-There WILL be examples. They are planned to be introduced in version 0.0.10 in a separate folder.
-
 ## Why this name?
 None knows;)
