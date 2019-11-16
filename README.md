@@ -15,8 +15,6 @@ Wish me luck in my attempt to master modern OpenGL.. Until then...
 See ya :) 
 
 ## Version warning
-Until version 0.1.0 - code structure, names and function implementations may change chaotically. Version in README.md may not be updated.
-
 Until version 1.0.0 - code won't be fully tested, so a huge variety of bugs may be present!
 
 ## Setup
