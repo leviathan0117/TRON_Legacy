@@ -3,6 +3,8 @@ A simple Python 3D graphics library based on OpenGL. Created to allow easier dev
 
 Source code available at: https://github.com/leviathan117/TRON_Legacy
 
+A newer library version is available at: https://github.com/leviathan117/TRON
+
 ## What's new (from previous version):
 This is the time, when this library became somewhat useful, so I think it's ready for the release.
  
